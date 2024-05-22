@@ -1,102 +1,63 @@
-#include<stdio.h>
-#include<string.h>
-#include<ctype.h>
-typedef struct
-{
-char var[10]; int alive;
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Function prototypes
+void assignment(char *exp);
+void arithmetic(char *exp);
+void relational(char *exp);
+
+int main() {
+    int choice;
+    char exp[100];
+
+    while (1) {
+        printf("\n1. Assignment\n2. Arithmetic\n3. Relational\n4. Exit\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter an assignment expression: ");
+                scanf("%s", exp);
+                assignment(exp);
+                break;
+            case 2:
+                printf("Enter an arithmetic expression: ");
+                scanf("%s", exp);
+                arithmetic(exp);
+                break;
+            case 3:
+                printf("Enter a relational expression: ");
+                scanf("%s", exp);
+                relational(exp);
+                break;
+            case 4:
+                exit(0);
+            default:
+                printf("Invalid choice!\n");
+        }
+    }
+
+    return 0;
 }
-regist;
-regist preg[10];
-void substring(char exp[],int st,int end)
-{
-int i,j=0;
-char dup[10]="";
-for(i=st;i<end;i++)
-dup[j++]=exp[i];
-dup[j]='0';
-strcpy(exp,dup);
+
+void assignment(char *exp) {
+    char variable, value;
+    sscanf(exp, "%c=%c", &variable, &value);
+    printf("Assignment: %c = %c\n", variable, value);
+    printf("Three Address Code:\ntemp=%c\ntemp1=temp\n", value);
 }
-int getregister(char var[])
-{
-int i; for(i=0;i<10;i++)
-{
-if(preg[i].alive==0)
-{
-strcpy(preg[i].var,var);
-break;
+
+void arithmetic(char *exp) {
+    int result;
+    sscanf(exp, "%d", &result);
+    printf("Arithmetic: %s = %d\n", exp, result);
+    printf("Three Address Code:\ntemp=%d\ntemp1=temp\n", result);
 }
-}
-return(i);
-}
-void getvar(char exp[],char v[])
-{
-int i,j=0;
-char var[10]="";
-for(i=0;exp[i]!='\0';i++)
-if(isalpha(exp[i]))
-var[j++]=exp[i];
-else
-break;
-strcpy(v,var);
-}
-void main()
-{
-char basic[10][10],var[10][10],fstr[10],op;
-int i,j,k,reg,vc,flag=0;
-printf("\nEnter the Three Address Code:\n");
-for(i=0;;i++)
-{
-gets(basic[i]);
-if(strcmp(basic[i],"exit")==0)
-break;
-}
-printf("\nThe Equivalent Assembly Code is:\n");
-for(j=0;j<i;j++)
-{
-getvar(basic[j],var[vc++]);
-strcpy(fstr,var[vc-1]);
-substring(basic[j],strlen(var[vc-1])+1,strlen(basic[j]));
-getvar(basic[j],var[vc++]);
-reg=getregister(var[vc-1]);
-if(preg[reg].alive==0)
-{
-printf("\nMov R%d,%s",reg,var[vc-1]);
-preg[reg].alive=1;
-}
-op=basic[j][strlen(var[vc-1])];
-210701033 – ARAVIND S
-substring(basic[j],strlen(var[vc-1])+1,strlen(basic[j]));
-getvar(basic[j],var[vc++]);
-switch(op)
-{
-case '+':
-printf("\nAdd");
-break; case '-':
-printf("\nSub");
-break;
-case '*':
-printf("\nMul");
-break;
-case '/':
-printf("\nDiv");
-break;
-}
-flag=1;
-for(k=0;k<=reg;k++)
-{
-if(strcmp(preg[k].var,var[vc-1])==0)
-{
-printf("R%d, R%d",k,reg);
-preg[k].alive=0;
-flag=0;
-break;
-}
-}
-if(flag)
-{
-printf(" %s,R%d",var[vc-1],reg);
-printf("\nMov %s,R%d",fstr,reg);
-}
-strcpy(preg[reg].var,var[vc-3]);
-}
+
+void relational(char *exp) {
+    char variable1, variable2, op;
+    sscanf(exp, "%c%c%c", &variable1, &op, &variable2);
+    printf("Relational: %c %c %c\n", variable1, op, variable2);
+    printf("Three Address Code:\ntemp1=%c\ntemp2=%c\ntemp=temp1%ctemp2\n", variable1, variable2, op);
 }
